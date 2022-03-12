@@ -18,8 +18,12 @@
 }
 .display{
     display: flex;
-    align-items: center;
-    justify-content: center;
+    align-items: flex-end;
+    justify-content: flex-end;
+    height: 130px;
+    border-radius: 10px;
+    margin: 20px;
+    background-color: white;
 }
 
 .calculator-container > *{
@@ -45,9 +49,7 @@
     background-color: brown;
 }
 #input-display{
-    height: 130px;
-    width: 100%;
-    background-color: white;
+
 }
 #clear{
     background-color: red;
