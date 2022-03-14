@@ -1,4 +1,6 @@
 .calculator-container{
+    display: flex;
+    flex-direction: column;
     width: 500px;
     height: 650px;
     border: 2px solid black;
@@ -42,7 +44,8 @@
     
 }
 
-.numbers{
+.numbers,
+.equal{
     background-color: rgb(105, 105, 105);
 }
 .operators{
