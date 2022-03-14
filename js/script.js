@@ -1,10 +1,10 @@
 
-let numbersAndOperators = Array.from(document.querySelector(".numbers-operators").childNodes);
+let numbers = Array.from(document.querySelectorAll(".numbers, .operators"));
 let displayScreen = document.querySelector("#input-display");
 let backspace = document.querySelector("#backspace");
 let clear = document.querySelector("#clear");
-let equal = document.querySelector(".equal")
-let input = ""
+let equal = document.querySelector("#equal")
+let input = displayScreen.textContent;
 let isLastInputOperator = false;
 
 backspace.addEventListener('click', function(){
@@ -15,18 +15,56 @@ clear.addEventListener('click', function(){
     input = ""
     displayScreen.textContent = input;
 })
-
-numbersAndOperators.forEach(button=>{
+equal.addEventListener('click', operate)
+numbers.forEach(button=>{
     button.addEventListener('click',function(){
-        console.log(button.className);
-        console.log(isLastInputOperator);
-        if(!(isLastInputOperator &&(button.className=="operators"))){
-            input = button.textContent;
-            displayScreen.textContent += input;
+        if(!(isLastInputOperator &&(button.className=="operators" ))){
+            displayScreen.textContent += button.textContent;
+            input += button.textContent;
         }
         isLastInputOperator = button.className == "operators"? true : false;    
     })
 })
+
+function operate(){
+    for (var i = 0; i < input.length; i++) {
+        if((!parseInt(input[i]))&& input[i] != 0){
+            //console.log(input[i])
+            let firstNumber = getFirstNumber(i);
+            let secondNumber = getSecondNumber(i);
+            console.log(`${add(firstNumber, secondNumber)}`);
+        }
+      }
+}
+function getFirstNumber(index){
+    let number = "";
+    index--;
+    
+    while(index >=0){
+        if((!parseInt(input[index]))&& input[index] != 0){
+            return parseInt(number);
+        }
+        number = input[index]+number;
+        index--;
+    }
+
+    return parseInt(number);
+}
+function getSecondNumber(index){
+    let number = "";
+    index++;
+    
+    while(index < input.length){
+        if((!parseInt(input[index]))&& input[index] != 0){
+            return parseInt(number);
+        }
+        number += input[index];
+        index++;
+    }
+
+    return parseInt(number);
+}
+
 
 function add(a,b){
     return (a+b);
