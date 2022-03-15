@@ -18,8 +18,12 @@ clear.addEventListener('click', function(){
     displayScreen.textContent = input;
 })
 equal.addEventListener('click', function(){
-    operate()
-    console.log(currentComputedValue)
+    if(!isLastInputOperator){
+        operate()
+        console.log(currentComputedValue)
+    }else{
+        console.log("error: expression is ending with operator")
+    }
 })
 numbers.forEach(button=>{
     button.addEventListener('click',function(){
