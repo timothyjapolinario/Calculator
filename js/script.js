@@ -15,7 +15,9 @@ clear.addEventListener('click', function(){
     input = ""
     displayScreen.textContent = input;
 })
-equal.addEventListener('click', operate)
+equal.addEventListener('click', function(){
+    console.log(operate());
+})
 numbers.forEach(button=>{
     button.addEventListener('click',function(){
         if(!(isLastInputOperator &&(button.className=="operators" ))){
@@ -32,7 +34,12 @@ function operate(){
             //console.log(input[i])
             let firstNumber = getFirstNumber(i);
             let secondNumber = getSecondNumber(i);
-            console.log(`${add(firstNumber, secondNumber)}`);
+            switch(input[i]){
+                case "+":return add(firstNumber,secondNumber);
+                case "-":return subtract(firstNumber,secondNumber);
+                case "×":return multiply(firstNumber,secondNumber);
+                case "÷":return divide(firstNumber,secondNumber);
+            }
         }
       }
 }
