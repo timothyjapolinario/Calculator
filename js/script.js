@@ -14,6 +14,7 @@ backspace.addEventListener('click', function(){
 })
 clear.addEventListener('click', function(){
     input = ""
+    currentComputedValue = null;
     displayScreen.textContent = input;
 })
 equal.addEventListener('click', function(){
