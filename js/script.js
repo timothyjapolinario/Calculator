@@ -6,6 +6,7 @@ let clear = document.querySelector("#clear");
 let equal = document.querySelector("#equal")
 let input = displayScreen.textContent;
 let isLastInputOperator = false;
+let currentComputedValue;
 
 backspace.addEventListener('click', function(){
     input = displayScreen.textContent.slice(0,-1);
@@ -16,7 +17,8 @@ clear.addEventListener('click', function(){
     displayScreen.textContent = input;
 })
 equal.addEventListener('click', function(){
-    console.log(operate());
+    operate()
+    console.log(currentComputedValue)
 })
 numbers.forEach(button=>{
     button.addEventListener('click',function(){
@@ -31,14 +33,21 @@ numbers.forEach(button=>{
 function operate(){
     for (var i = 0; i < input.length; i++) {
         if((!parseInt(input[i]))&& input[i] != 0){
-            //console.log(input[i])
-            let firstNumber = getFirstNumber(i);
+            currentComputedValue = currentComputedValue? currentComputedValue: getFirstNumber(i);
             let secondNumber = getSecondNumber(i);
             switch(input[i]){
-                case "+":return add(firstNumber,secondNumber);
-                case "-":return subtract(firstNumber,secondNumber);
-                case "×":return multiply(firstNumber,secondNumber);
-                case "÷":return divide(firstNumber,secondNumber);
+                case "+":
+                    currentComputedValue = add(currentComputedValue,secondNumber);
+                    break;
+                case "-":
+                    currentComputedValue = subtract(currentComputedValue,secondNumber);
+                    break;
+                case "×":
+                    currentComputedValue = multiply(currentComputedValue,secondNumber);
+                    break;
+                case "÷":
+                    currentComputedValue = divide(currentComputedValue,secondNumber);
+                    break;
             }
         }
       }
