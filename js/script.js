@@ -11,7 +11,7 @@ let operandIndex = 0
 let isLastInputOperator = false;
 let selectedOperator;
 let currentComputedValue;
-
+console.log(typeof(operands));
 backspace.addEventListener('click', function(){
     textInput = displayScreen.textContent.slice(0,-1);
     displayScreen.textContent = textInput;
@@ -36,28 +36,28 @@ numbers.forEach(button=>{
 })
 operators.forEach(operator=>{
     operator.addEventListener('click', function(){
-        updateOperands()
+        updateOperands();
         selectedOperator = operator.textContent;
         clear()
         displayScreen.textContent = operator.textContent;
         isLastInputOperator = true
-        operandIndex = 1;
     })
 })
 function updateOperands(){
-    if(!operands[operandIndex]){
-        operands[operandIndex] = parseInt(displayScreen.textContent);
-    }
+    operands[operandIndex] = parseInt(displayScreen.textContent);
+    if(operandIndex == 0){
+        operandIndex = 1;
+    }else{
+        operandIndex = 0;
+    };
 }
 function clear(){
-    operands = [];
     textInput = ""
     currentComputedValue = null;
     displayScreen.textContent = textInput;
 }
 function operate(){
-    updateOperands()
-    operandIndex = 0;
+    updateOperands();
     switch(selectedOperator){
         case "+":
             currentComputedValue = add(operands[0],operands[1]);
@@ -72,13 +72,12 @@ function operate(){
             currentComputedValue = divide(operands[0],operands[1]);
             break;
     }
-    console.log()
 }
 
 
 
 function add(a,b){
-    console.log(`${a}, ${b}`)
+    
     return (a+b);
 }
 function subtract(a,b){
