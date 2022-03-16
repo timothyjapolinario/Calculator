@@ -1,23 +1,23 @@
 
-let numbers = Array.from(document.querySelectorAll(".numbers, .operators"));
+let numbers = Array.from(document.querySelectorAll(".numbers"));
+let operators = Array.from(document.querySelectorAll(".operators"));
 let displayScreen = document.querySelector("#input-display");
 let backspace = document.querySelector("#backspace");
-let clear = document.querySelector("#clear");
-let equal = document.querySelector("#equal")
-let input = displayScreen.textContent;
+let clearButton = document.querySelector("#clear");
+let equalButton = document.querySelector("#equal")
+let textInput = displayScreen.textContent;
+let operands = [];
+let operandIndex = 0
 let isLastInputOperator = false;
+let selectedOperator;
 let currentComputedValue;
 
 backspace.addEventListener('click', function(){
-    input = displayScreen.textContent.slice(0,-1);
-    displayScreen.textContent = input;
+    textInput = displayScreen.textContent.slice(0,-1);
+    displayScreen.textContent = textInput;
 })
-clear.addEventListener('click', function(){
-    input = ""
-    currentComputedValue = null;
-    displayScreen.textContent = input;
-})
-equal.addEventListener('click', function(){
+clearButton.addEventListener('click', clear)
+equalButton.addEventListener('click', function(){
     if(!isLastInputOperator){
         operate()
         console.log(currentComputedValue)
@@ -27,67 +27,58 @@ equal.addEventListener('click', function(){
 })
 numbers.forEach(button=>{
     button.addEventListener('click',function(){
-        if(!(isLastInputOperator &&(button.className=="operators" ))){
-            displayScreen.textContent += button.textContent;
-            input += button.textContent;
+        if(isLastInputOperator){
+            isLastInputOperator = false;
+            clear();
         }
-        isLastInputOperator = button.className == "operators"? true : false;    
+        displayScreen.textContent += button.textContent;
     })
 })
-
+operators.forEach(operator=>{
+    operator.addEventListener('click', function(){
+        updateOperands()
+        selectedOperator = operator.textContent;
+        clear()
+        displayScreen.textContent = operator.textContent;
+        isLastInputOperator = true
+        operandIndex = 1;
+    })
+})
+function updateOperands(){
+    if(!operands[operandIndex]){
+        operands[operandIndex] = parseInt(displayScreen.textContent);
+    }
+}
+function clear(){
+    operands = [];
+    textInput = ""
+    currentComputedValue = null;
+    displayScreen.textContent = textInput;
+}
 function operate(){
-    for (var i = 0; i < input.length; i++) {
-        if((!parseInt(input[i]))&& input[i] != 0){
-            currentComputedValue = currentComputedValue? currentComputedValue: getFirstNumber(i);
-            let secondNumber = getSecondNumber(i);
-            switch(input[i]){
-                case "+":
-                    currentComputedValue = add(currentComputedValue,secondNumber);
-                    break;
-                case "-":
-                    currentComputedValue = subtract(currentComputedValue,secondNumber);
-                    break;
-                case "×":
-                    currentComputedValue = multiply(currentComputedValue,secondNumber);
-                    break;
-                case "÷":
-                    currentComputedValue = divide(currentComputedValue,secondNumber);
-                    break;
-            }
-        }
-      }
-}
-function getFirstNumber(index){
-    let number = "";
-    index--;
-    
-    while(index >=0){
-        if((!parseInt(input[index]))&& input[index] != 0){
-            return parseInt(number);
-        }
-        number = input[index]+number;
-        index--;
+    updateOperands()
+    operandIndex = 0;
+    switch(selectedOperator){
+        case "+":
+            currentComputedValue = add(operands[0],operands[1]);
+            break;
+        case "-":
+            currentComputedValue = subtract(operands[0],operands[1]);
+            break;
+        case "×":
+            currentComputedValue = multiply(operands[0],operands[1]);
+            break;
+        case "÷":
+            currentComputedValue = divide(operands[0],operands[1]);
+            break;
     }
-
-    return parseInt(number);
+    console.log()
 }
-function getSecondNumber(index){
-    let number = "";
-    index++;
-    
-    while(index < input.length){
-        if((!parseInt(input[index]))&& input[index] != 0){
-            return parseInt(number);
-        }
-        number += input[index];
-        index++;
-    }
 
-    return parseInt(number);
-}
 
 
 function add(a,b){
+    console.log(`${a}, ${b}`)
     return (a+b);
 }
 function subtract(a,b){
