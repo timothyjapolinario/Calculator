@@ -22,6 +22,7 @@ clearButton.addEventListener('click', reset)
 equalButton.addEventListener('click', function(){
     if(!isLastInputOperator){
         operate()
+        console.log(`computedValue: ${currentComputedValue}`)
     }else{
         console.log("error: expression is ending with operator")
     }
@@ -37,15 +38,19 @@ numbers.forEach(button=>{
 })
 operators.forEach(operator=>{
     operator.addEventListener('click', function(){
-        selectedOperator = operator.textContent;
+        if(currentComputedValue){
+            operate()
+        }
         if(!currentComputedValue){
             currentComputedValue = parseInt(displayScreen.textContent)
         }else{
             nextValue = parseInt(displayScreen.textContent)
         }
+        selectedOperator = operator;
         clearDisplay()
-        displayScreen.textContent = selectedOperator;
+        displayScreen.textContent = selectedOperator.textContent;
         isLastInputOperator = true;
+        console.log(`${currentComputedValue}, ${nextValue}`);
     })
 })
 
@@ -55,22 +60,22 @@ function clearDisplay(){
 function reset(){
     clearDisplay();
     currentComputedValue = null;
+    nextValue = null;
 }
 function operate(){
-    nextValue = displayScreen.textContent;
-    console.log(`${currentComputedValue}, ${nextValue}`)
+    nextValue = parseInt(displayScreen.textContent);
     switch(selectedOperator.textContent){
         case "+":
             currentComputedValue = add(currentComputedValue , nextValue);
             break;
         case "-":
-            currentComputedValue = subtract(operands[0],operands[1]);
+            currentComputedValue = subtract(currentComputedValue , nextValue);
             break;
         case "×":
-            currentComputedValue = multiply(operands[0],operands[1]);
+            currentComputedValue = multiply(currentComputedValue , nextValue);
             break;
         case "÷":
-            currentComputedValue = divide(operands[0],operands[1]);
+            currentComputedValue = divide(currentComputedValue , nextValue);
             break;
     }
 }
@@ -82,12 +87,15 @@ function add(a,b){
     return (a+b);
 }
 function subtract(a,b){
+    console.log(`${a} - ${b}`)
     return (a-b);
 }
 function multiply(a,b){
+    console.log(`${a} x ${b}`)
     return (a*b);
 }
 function divide(a,b){
+    console.log(`${a} / ${b}`)
     return (a/b);
 }
 
