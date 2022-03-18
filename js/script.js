@@ -14,8 +14,9 @@ let nextValue;
 let isStarting = true;
 backspace.addEventListener('click', function(){
     textInput = displayScreen.textContent.slice(0,-1);
-    displayScreen.textContent = textInput;
+    displayScreen.textContent = textInput?textInput:0;
     historyScreen.textContent = historyScreen.textContent.slice(0,-1);
+    
 })
 clearButton.addEventListener('click', function(){
     clearDisplay();
@@ -23,10 +24,8 @@ clearButton.addEventListener('click', function(){
 })
 equalButton.addEventListener('click', function(){
     if(isLastInputOperator){
-        console.log("error: last input operator")
     }else{
         operate();
-        console.log(`currVal ${currentComputedValue}`);
         reset();
     }
 })
@@ -40,32 +39,44 @@ numbers.forEach(button=>{
         if(isLastInputOperator){
            clearDisplay(); 
            isLastInputOperator = false;
-           console.log("cat")
         }
-        displayScreen.textContent += button.textContent;
-        historyScreen.textContent += button.textContent;
+        if(button.textContent == "."){
+            if(!displayScreen.textContent.includes(".")){
+                displayScreen.textContent += button.textContent;
+                historyScreen.textContent += button.textContent;
+            }
+            return;
+        }
+        if(displayScreen.textContent.length < 20){
+            if(displayScreen.textContent == "0"){
+                clearDisplay();
+            }
+            displayScreen.textContent += button.textContent;
+            historyScreen.textContent += button.textContent;
+        }
     })
 })
 operators.forEach(operator=>{
     operator.addEventListener('click', function(){
-        selectedOperator = operator;
-        //if there is no computedValue yet, get content
-        if(isLastInputOperator){
-
-            if(historyScreen.textContent.slice(0,-1).match(/[+ - ÷ ×]/)){
-                historyScreen.textContent = historyScreen.textContent.slice(0,-1) + selectedOperator.textContent
-                
-            }
-        }else{
-            if(!currentComputedValue || nextValue == null){
-                currentComputedValue = parseFloat(displayScreen.textContent);
-            }else{
-                operate()
-                displayScreen.textContent = currentComputedValue;
-            }
-            historyScreen.textContent += operator.textContent;
-            isLastInputOperator = true;
+        
+        if(historyScreen.textContent.slice(-1).match(/[\+ \- \× \÷]/g)){
+            selectedOperator = operator;
+            historyScreen.textContent = historyScreen.textContent.slice(0,-1) + operator.textContent;
+            return;
         }
+        if((historyScreen.textContent.match(/[\+ \- \× \÷]/g) || []).length > 0){
+            operate();
+        }
+        selectedOperator = operator;
+        historyScreen.textContent += operator.textContent;
+
+        //if there is no computedValue yet, get content
+        if(!currentComputedValue || nextValue == null){
+            currentComputedValue = parseFloat(displayScreen.textContent);
+        }else{
+            displayScreen.textContent = currentComputedValue;
+        }
+        isLastInputOperator = true;
     })
 })
 
