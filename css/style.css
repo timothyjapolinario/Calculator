@@ -47,7 +47,6 @@ body{
     flex-direction: column;
     padding:10px
 }
-
 .calculator-container > *{
     padding:20px;
 }

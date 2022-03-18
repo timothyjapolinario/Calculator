@@ -12,6 +12,8 @@ let selectedOperator;
 let currentComputedValue;
 let nextValue;
 let isCleared = false;
+let isFinish = false;
+let isStarting = true;
 console.log(typeof(operands));
 
 backspace.addEventListener('click', function(){
@@ -19,10 +21,14 @@ backspace.addEventListener('click', function(){
     displayScreen.textContent = textInput;
     historyScreen.textContent = historyScreen.textContent.slice(0,-1);
 })
-clearButton.addEventListener('click', reset)
+clearButton.addEventListener('click', function(){
+    clearDisplay();
+    reset();
+})
 equalButton.addEventListener('click', function(){
     if(!isLastInputOperator){
         operate()
+        isFinish = true;
         console.log(`computedValue: ${currentComputedValue}`)
     }else{
         console.log("error: expression is ending with operator")
@@ -31,6 +37,7 @@ equalButton.addEventListener('click', function(){
 
 numbers.forEach(button=>{
     button.addEventListener('click',function(){
+        isFinish = false;
         if(isLastInputOperator){
             isLastInputOperator = false;
             clearDisplay();
@@ -39,15 +46,19 @@ numbers.forEach(button=>{
             clearDisplay();
             isCleared = false
         }
-
-        if(displayScreen.textContent.length < 20){
-            displayScreen.textContent += button.textContent;
-            historyScreen.textContent += button.textContent;
+        if((displayScreen.textContent.length < 20)){
+            if(!((button.textContent == ".")&&(displayScreen.textContent.includes(".")))){
+                displayScreen.textContent+=button.textContent;
+                if(isStarting){
+                    historyScreen.textContent += button.textContent;
+                }
+            }
         }
     })
 })
 operators.forEach(operator=>{
     operator.addEventListener('click', function(){
+        console.log(isLastInputOperator);
         if(currentComputedValue){
             if(!isLastInputOperator){
                 operate()
@@ -59,15 +70,18 @@ operators.forEach(operator=>{
             nextValue = parseFloat(displayScreen.textContent)
         }
         selectedOperator = operator;
-        if(isLastInputOperator){
-            if(!(selectedOperator.textContent == historyScreen.textContent.slice(-1))){
+        if(isLastInputOperator && !(isFinish)){
+            if(historyScreen.textContent.match(/[+ - ÷ ×/]+/)){
                 historyScreen.textContent = historyScreen.textContent.slice(0,-1)+ selectedOperator.textContent;
+            }else{
+                historyScreen.textContent += operator.textContent;
             }
         }else{
             historyScreen.textContent += selectedOperator.textContent;
         }
         isLastInputOperator = true;
-        console.log(`${currentComputedValue}, ${nextValue}`);
+        isStarting = false;
+        console.log(`${currentComputedValue}`);
     })
 })
 
@@ -75,12 +89,13 @@ function clearDisplay(){
     displayScreen.textContent = ""
 }
 function reset(){
-    clearDisplay();
     historyScreen.textContent = "";
     isCleared = true;
+    isStarting = true;
     displayScreen.textContent = 0;
     currentComputedValue = null;
     nextValue = null;
+    isFinish = false;
 }
 function operate(){
     nextValue = parseFloat(displayScreen.textContent);
@@ -98,7 +113,9 @@ function operate(){
             currentComputedValue = divide(currentComputedValue , nextValue);
             break;
     }
+    isLastInputOperator = true
     displayScreen.textContent = currentComputedValue;
+    historyScreen.textContent = `${currentComputedValue}`
 }
 
 
