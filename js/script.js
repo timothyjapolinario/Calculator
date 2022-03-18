@@ -39,8 +39,11 @@ numbers.forEach(button=>{
             clearDisplay();
             isCleared = false
         }
-        displayScreen.textContent += button.textContent;
-        historyScreen.textContent += button.textContent;
+
+        if(displayScreen.textContent.length < 20){
+            displayScreen.textContent += button.textContent;
+            historyScreen.textContent += button.textContent;
+        }
     })
 })
 operators.forEach(operator=>{
@@ -49,14 +52,12 @@ operators.forEach(operator=>{
             operate()
         }
         if(!currentComputedValue){
-            currentComputedValue = parseInt(displayScreen.textContent)
+            currentComputedValue = parseFloat(displayScreen.textContent)
         }else{
-            nextValue = parseInt(displayScreen.textContent)
+            nextValue = parseFloat(displayScreen.textContent)
         }
         selectedOperator = operator;
         historyScreen.textContent += selectedOperator.textContent;
-        clearDisplay()
-        displayScreen.textContent = selectedOperator.textContent;
         isLastInputOperator = true;
         console.log(`${currentComputedValue}, ${nextValue}`);
     })
@@ -74,7 +75,7 @@ function reset(){
     nextValue = null;
 }
 function operate(){
-    nextValue = parseInt(displayScreen.textContent);
+    nextValue = parseFloat(displayScreen.textContent);
     switch(selectedOperator.textContent){
         case "+":
             currentComputedValue = add(currentComputedValue , nextValue);
@@ -89,6 +90,7 @@ function operate(){
             currentComputedValue = divide(currentComputedValue , nextValue);
             break;
     }
+    displayScreen.textContent = currentComputedValue;
 }
 
 
