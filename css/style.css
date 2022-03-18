@@ -40,6 +40,7 @@
     margin: 20px;
     background-color: white;
     flex-direction: column;
+    padding:10px
 }
 
 .calculator-container > *{
@@ -66,7 +67,10 @@
     background-color: brown;
 }
 #input-display{
-    
+    font-size: 40px;
+}
+#history-display{
+    font-size:20px
 }
 #clear{
     background-color: red;
