@@ -49,7 +49,9 @@ numbers.forEach(button=>{
 operators.forEach(operator=>{
     operator.addEventListener('click', function(){
         if(currentComputedValue){
-            operate()
+            if(!isLastInputOperator){
+                operate()
+            }
         }
         if(!currentComputedValue){
             currentComputedValue = parseFloat(displayScreen.textContent)
@@ -57,7 +59,13 @@ operators.forEach(operator=>{
             nextValue = parseFloat(displayScreen.textContent)
         }
         selectedOperator = operator;
-        historyScreen.textContent += selectedOperator.textContent;
+        if(isLastInputOperator){
+            if(!(selectedOperator.textContent == historyScreen.textContent.slice(-1))){
+                historyScreen.textContent = historyScreen.textContent.slice(0,-1)+ selectedOperator.textContent;
+            }
+        }else{
+            historyScreen.textContent += selectedOperator.textContent;
+        }
         isLastInputOperator = true;
         console.log(`${currentComputedValue}, ${nextValue}`);
     })
