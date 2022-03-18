@@ -7,15 +7,11 @@ let backspace = document.querySelector("#backspace");
 let clearButton = document.querySelector("#clear");
 let equalButton = document.querySelector("#equal")
 let textInput = displayScreen.textContent;
-let isLastInputOperator = true;
+let isLastInputOperator = false;
 let selectedOperator;
 let currentComputedValue;
 let nextValue;
-let isCleared = false;
-let isFinish = false;
 let isStarting = true;
-console.log(typeof(operands));
-
 backspace.addEventListener('click', function(){
     textInput = displayScreen.textContent.slice(0,-1);
     displayScreen.textContent = textInput;
@@ -23,72 +19,62 @@ backspace.addEventListener('click', function(){
 })
 clearButton.addEventListener('click', function(){
     clearDisplay();
-    reset();
+    clear();
 })
 equalButton.addEventListener('click', function(){
-    if(!isLastInputOperator){
-        operate()
-        isFinish = true;
-        console.log(`computedValue: ${currentComputedValue}`)
+    if(isLastInputOperator){
+        console.log("error: last input operator")
     }else{
-        console.log("error: expression is ending with operator")
+        operate();
+        console.log(`currVal ${currentComputedValue}`);
+        reset();
     }
 })
-
+function reset(){
+    isLastInputOperator = false;
+    nextValue = null;
+}
 numbers.forEach(button=>{
-    button.addEventListener('click',function(){
-        isFinish = false;
+    button.addEventListener('click', function(){
+        //if last input is not operator
         if(isLastInputOperator){
-            isLastInputOperator = false;
-            clearDisplay();
+           clearDisplay(); 
+           isLastInputOperator = false;
+           console.log("cat")
         }
-        if(isCleared){
-            clearDisplay();
-            isCleared = false
-        }
-        if((displayScreen.textContent.length < 20)){
-            if(!((button.textContent == ".")&&(displayScreen.textContent.includes(".")))){
-                displayScreen.textContent+=button.textContent;
-                if(isStarting){
-                    historyScreen.textContent += button.textContent;
-                }
-            }
-        }
+        displayScreen.textContent += button.textContent;
+        historyScreen.textContent += button.textContent;
     })
 })
 operators.forEach(operator=>{
     operator.addEventListener('click', function(){
-        console.log(isLastInputOperator);
-        if(currentComputedValue){
-            if(!isLastInputOperator){
-                operate()
-            }
-        }
-        if(!currentComputedValue){
-            currentComputedValue = parseFloat(displayScreen.textContent)
-        }else{
-            nextValue = parseFloat(displayScreen.textContent)
-        }
         selectedOperator = operator;
-        if(isLastInputOperator && !(isFinish)){
-            if(historyScreen.textContent.match(/[+ - ÷ ×/]+/)){
-                historyScreen.textContent = historyScreen.textContent.slice(0,-1)+ selectedOperator.textContent;
-            }else{
-                historyScreen.textContent += operator.textContent;
+        //if there is no computedValue yet, get content
+        if(isLastInputOperator){
+
+            if(historyScreen.textContent.slice(0,-1).match(/[+ - ÷ ×]/)){
+                historyScreen.textContent = historyScreen.textContent.slice(0,-1) + selectedOperator.textContent
+                
             }
         }else{
-            historyScreen.textContent += selectedOperator.textContent;
+            if(!currentComputedValue || nextValue == null){
+                currentComputedValue = parseFloat(displayScreen.textContent);
+            }else{
+                operate()
+                displayScreen.textContent = currentComputedValue;
+            }
+            historyScreen.textContent += operator.textContent;
+            isLastInputOperator = true;
         }
-        isLastInputOperator = true;
-        isStarting = false;
-        console.log(`${currentComputedValue}`);
     })
 })
+
+
 
 function clearDisplay(){
     displayScreen.textContent = ""
 }
-function reset(){
+function clear(){
     historyScreen.textContent = "";
     isCleared = true;
     isStarting = true;
@@ -96,6 +82,7 @@ function reset(){
     currentComputedValue = null;
     nextValue = null;
     isFinish = false;
+    isLastInputOperator = true;
 }
 function operate(){
     nextValue = parseFloat(displayScreen.textContent);
