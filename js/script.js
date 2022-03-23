@@ -14,7 +14,9 @@ let nextValue;
 let isEqualPressed = false
 backspace.addEventListener('click', function(){
     textInput = displayScreen.textContent.slice(0,-1);
-    displayScreen.textContent = textInput?textInput:0;
+    if(!historyScreen.textContent.slice(-1).match(/[\+ \- \× \÷]/g)){
+        displayScreen.textContent = textInput?textInput:0;
+    }
     historyScreen.textContent = historyScreen.textContent.slice(0,-1);
     
 })
@@ -24,17 +26,13 @@ clearButton.addEventListener('click', function(){
 })
 equalButton.addEventListener('click', function(){
     if(isLastInputOperator){}else{
-        console.log(isEqualPressed);
         operate();
         isEqualPressed = true;
-        reset();
+        isLastInputOperator = false;
     }
 })
-function reset(){
-    isLastInputOperator = false;
-}
 numbers.forEach(button=>{
-    button.addEventListener('click', function(){
+    button.addEventListener('click', function(e){
         //if last input is not operator
         if(isLastInputOperator){
            clearDisplay(); 
@@ -54,6 +52,7 @@ numbers.forEach(button=>{
             displayScreen.textContent += button.textContent;
             historyScreen.textContent += button.textContent;
         }
+        button.prevent
         isEqualPressed = false
     })
 })
@@ -101,7 +100,6 @@ function clear(){
 function operate(){
     if(!isEqualPressed){
         nextValue = parseFloat(displayScreen.textContent);
-        console.log("lol")
     }
     switch(selectedOperator.textContent){
         case "+":
