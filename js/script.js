@@ -14,7 +14,9 @@ let nextValue;
 let isEqualPressed = false
 backspace.addEventListener('click', function(){
     textInput = displayScreen.textContent.slice(0,-1);
-    if(!historyScreen.textContent.slice(-1).match(/[\+ \- \× \÷]/g)){
+    if(historyScreen.textContent.slice(-1).match(/[\+ \- \× \÷]/g)){
+        isLastInputOperator = false;
+    }else{
         displayScreen.textContent = textInput?textInput:0;
     }
     historyScreen.textContent = historyScreen.textContent.slice(0,-1);
